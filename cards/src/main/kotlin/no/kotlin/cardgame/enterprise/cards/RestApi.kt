@@ -1,4 +1,4 @@
-package no.enterprise.kotlin.cardgame.cards
+package no.kotlin.cardgame.enterprise.cards
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

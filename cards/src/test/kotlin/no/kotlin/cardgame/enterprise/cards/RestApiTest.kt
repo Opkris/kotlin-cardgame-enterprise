@@ -1,16 +1,17 @@
-package no.enterprise.kotlin.cardgame.cards
+package no.kotlin.cardgame.enterprise.cards
 
-import io.restassured.RestAssured
-import no.enterprise.kotlin.cardgame.cards.RestApi.Companion.LATEST
-import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.*
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
+import io.restassured.RestAssured
+import javax.annotation.PostConstruct
+import io.restassured.RestAssured.given
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.test.context.ActiveProfiles
+import no.kotlin.cardgame.enterprise.cards.RestApi.Companion.LATEST
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import javax.annotation.PostConstruct
+
 
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension::class)
@@ -32,30 +33,30 @@ internal class RestApiTest {
     @Test
     fun testGetImg() {
 
-        RestAssured.given().get("/api/cards/imgs/001-monster.svg")
+        given().get("/api/cards/imgs/001-monster.svg")
                 .then()
                 .statusCode(200)
                 .contentType("image/svg+xml")
-                .header("cache-control", Matchers.`is`(Matchers.notNullValue()))
+                .header("cache-control", `is`(notNullValue()))
     }
 
     @Test
     fun testGetCollection() {
 
-        RestAssured.given().get("/api/cards/collection_$LATEST")
+        given().get("/api/cards/collection_$LATEST")
                 .then()
                 .statusCode(200)
-                .body("data.cards.size", Matchers.greaterThan(10))
+                .body("data.cards.size", greaterThan(10))
     }
 
 
     @Test
     fun testGetCollectionOldVersion() {
 
-        RestAssured.given().get("/api/cards/collection_v0_002")
+        given().get("/api/cards/collection_v0_002")
                 .then()
                 .statusCode(200)
-                .body("data.cards.size", Matchers.greaterThan(10))
+                .body("data.cards.size", greaterThan(10))
     }
 
 }

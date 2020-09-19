@@ -1,12 +1,14 @@
-package no.enterprise.kotlin.cardgame.usercollections.db
+package no.kotlin.cardgame.enterprise.usercollections.db
 
-import no.enterprise.kotlin.cardgame.usercollections.CardService
-import no.enterprise.kotlin.cardgame.usercollections.FakeData
-import no.enterprise.kotlin.cardgame.usercollections.model.Collection
+import no.kotlin.cardgame.enterprise.usercollections.FakeData
+import no.kotlin.cardgame.enterprise.usercollections.CardService
+import no.kotlin.cardgame.enterprise.usercollections.model.Collection
+
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Primary
@@ -14,7 +16,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-
 @Profile("UserServiceTest")
 @Primary
 @Service

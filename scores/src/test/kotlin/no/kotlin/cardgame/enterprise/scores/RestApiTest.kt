@@ -3,7 +3,7 @@ package no.kotlin.cardgame.enterprise.scores
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import io.restassured.http.ContentType
-import no.enterprise.kotlin.cardgame.rest.dto.PageDto
+import no.kotlin.cardgame.enterprise.rest.dto.PageDto
 import no.kotlin.cardgame.enterprise.scores.db.UserStatsRepository
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.Assertions.*

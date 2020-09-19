@@ -1,6 +1,6 @@
 package no.kotlin.cardgame.enterprise.usercollections
 
-import no.enterprise.kotlin.cardgame.cards.dto.Rarity
+import no.kotlin.cardgame.enterprise.cards.dto.Rarity
 import no.kotlin.cardgame.enterprise.usercollections.model.Card
 import no.kotlin.cardgame.enterprise.usercollections.model.Collection
 import org.slf4j.LoggerFactory

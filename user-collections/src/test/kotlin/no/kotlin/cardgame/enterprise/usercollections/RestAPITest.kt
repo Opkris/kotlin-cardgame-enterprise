@@ -1,13 +1,14 @@
-package no.enterprise.kotlin.cardgame.usercollections
+package no.kotlin.cardgame.enterprise.usercollections
 
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
-import no.enterprise.kotlin.cardgame.usercollections.db.UserRepository
-import no.enterprise.kotlin.cardgame.usercollections.db.UserService
-import no.enterprise.kotlin.cardgame.usercollections.dto.Command
-import no.enterprise.kotlin.cardgame.usercollections.dto.PatchUserDto
-import no.enterprise.kotlin.cardgame.usercollections.model.Collection
+import no.kotlin.cardgame.enterprise.usercollections.CardService
+import no.kotlin.cardgame.enterprise.usercollections.db.UserRepository
+import no.kotlin.cardgame.enterprise.usercollections.db.UserService
+import no.kotlin.cardgame.enterprise.usercollections.dto.Command
+import no.kotlin.cardgame.enterprise.usercollections.dto.PatchUserDto
+import no.kotlin.cardgame.enterprise.usercollections.model.Collection
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

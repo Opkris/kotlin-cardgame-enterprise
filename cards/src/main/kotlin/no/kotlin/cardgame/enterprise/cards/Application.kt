@@ -1,4 +1,4 @@
-package no.enterprise.kotlin.cardgame.cards
+package no.kotlin.cardgame.enterprise.cards
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -9,7 +9,7 @@ import springfox.documentation.service.ApiInfo
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 
-@SpringBootApplication(scanBasePackages = ["no.jonpus.enterprise2.cardgame"])
+@SpringBootApplication(scanBasePackages = ["no.kotlin.cardgame.enterprise"])
 class Application {
 
     @Bean

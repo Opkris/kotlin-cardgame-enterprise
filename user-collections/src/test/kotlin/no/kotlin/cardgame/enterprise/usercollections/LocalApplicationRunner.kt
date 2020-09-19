@@ -1,5 +1,6 @@
-package no.enterprise.kotlin.cardgame.usercollections
+package no.kotlin.cardgame.enterprise.usercollections
 
+import no.kotlin.cardgame.enterprise.usercollections.Application
 import org.springframework.boot.SpringApplication
 
 

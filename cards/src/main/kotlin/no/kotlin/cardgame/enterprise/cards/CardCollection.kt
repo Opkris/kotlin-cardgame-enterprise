@@ -1,4 +1,4 @@
-package no.enterprise.kotlin.cardgame.cards
+package no.kotlin.cardgame.enterprise.cards
 
 import no.kotlin.cardgame.enterprise.cards.dto.CardDto
 import no.kotlin.cardgame.enterprise.cards.dto.CollectionDto

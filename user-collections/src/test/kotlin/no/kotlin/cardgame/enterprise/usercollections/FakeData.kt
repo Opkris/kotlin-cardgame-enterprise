@@ -1,8 +1,9 @@
-package no.enterprise.kotlin.cardgame.usercollections
+package no.kotlin.cardgame.enterprise.usercollections
 
-import no.enterprise.kotlin.cardgame.cards.dto.CardDto
-import no.enterprise.kotlin.cardgame.cards.dto.CollectionDto
-import no.enterprise.kotlin.cardgame.cards.dto.Rarity.*
+import no.kotlin.cardgame.enterprise.cards.dto.CardDto
+import no.kotlin.cardgame.enterprise.cards.dto.CollectionDto
+import no.kotlin.cardgame.enterprise.cards.dto.Rarity.*
+
 
 object FakeData {
 

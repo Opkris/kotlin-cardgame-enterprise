@@ -1,7 +1,7 @@
 package no.kotlin.cardgame.enterprise.usercollections.model
 
-import no.enterprise.kotlin.cardgame.cards.dto.CollectionDto
-import no.enterprise.kotlin.cardgame.cards.dto.Rarity
+import no.kotlin.cardgame.enterprise.cards.dto.CollectionDto
+import no.kotlin.cardgame.enterprise.cards.dto.Rarity
 import kotlin.math.abs
 
 

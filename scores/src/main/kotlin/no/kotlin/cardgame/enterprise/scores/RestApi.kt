@@ -3,9 +3,9 @@ package no.kotlin.cardgame.enterprise.scores
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
-import no.enterprise.kotlin.cardgame.rest.dto.PageDto
-import no.enterprise.kotlin.cardgame.rest.dto.RestResponseFactory
-import no.enterprise.kotlin.cardgame.rest.dto.WrappedResponse
+import no.kotlin.cardgame.enterprise.rest.dto.PageDto
+import no.kotlin.cardgame.enterprise.rest.dto.RestResponseFactory
+import no.kotlin.cardgame.enterprise.rest.dto.WrappedResponse
 import no.kotlin.cardgame.enterprise.scores.db.UserStatsRepository
 import no.kotlin.cardgame.enterprise.scores.db.UserStatsService
 import no.kotlin.cardgame.enterprise.scores.dto.UserStatsDto
