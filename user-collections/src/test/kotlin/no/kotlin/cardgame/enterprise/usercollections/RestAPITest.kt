@@ -3,31 +3,35 @@ package no.kotlin.cardgame.enterprise.usercollections
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
+
 import no.kotlin.cardgame.enterprise.usercollections.CardService
 import no.kotlin.cardgame.enterprise.usercollections.db.UserRepository
 import no.kotlin.cardgame.enterprise.usercollections.db.UserService
 import no.kotlin.cardgame.enterprise.usercollections.dto.Command
 import no.kotlin.cardgame.enterprise.usercollections.dto.PatchUserDto
 import no.kotlin.cardgame.enterprise.usercollections.model.Collection
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
+
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.context.annotation.Primary
-import org.springframework.context.annotation.Profile
-import org.springframework.stereotype.Service
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.junit.jupiter.SpringExtension
+
 import javax.annotation.PostConstruct
+import org.springframework.stereotype.Service
+import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.Primary
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
 
 
 @Profile("RestApiTest")
 @Primary
 @Service
-class FakeCardService : CardService() {
+class FakeCardService : CardService(Resilience4JCircuitBreakerFactory()) {
 
     override fun fetchData() {
         val dto = FakeData.getCollectionDto()

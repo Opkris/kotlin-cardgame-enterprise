@@ -4,30 +4,30 @@ import no.kotlin.cardgame.enterprise.usercollections.FakeData
 import no.kotlin.cardgame.enterprise.usercollections.CardService
 import no.kotlin.cardgame.enterprise.usercollections.model.Collection
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.stereotype.Service
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
-import org.springframework.stereotype.Service
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
+
 @Profile("UserServiceTest")
 @Primary
 @Service
-class FakeCardService : CardService(){
+class FakeCardService : CardService(Resilience4JCircuitBreakerFactory()){
 
     override fun fetchData() {
         val dto = FakeData.getCollectionDto()
         super.collection = Collection(dto)
     }
 }
-
-
 
 @ActiveProfiles("UserServiceTest,test")
 @ExtendWith(SpringExtension::class)
