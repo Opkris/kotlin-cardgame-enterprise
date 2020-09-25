@@ -16,6 +16,7 @@
         <module>cards-dto</module>
         <module>rest-exception</module>
         <module>user-collections</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
