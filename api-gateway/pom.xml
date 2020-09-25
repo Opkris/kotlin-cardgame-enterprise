@@ -7,10 +7,10 @@
     <parent>
         <artifactId>kotlin-cardgame-enterprise</artifactId>
         <groupId>org.example</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api-gateway</artifactId>
+    <artifactId>apigateway</artifactId>
     <packaging>jar</packaging>
 
 
