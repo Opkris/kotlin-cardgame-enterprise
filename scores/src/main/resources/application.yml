@@ -10,9 +10,15 @@ spring:
   datasource:
     url: "jdbc:postgresql://postgres-scores:5432/postgres"
     username: "postgres"
-    password: ""
+    password: "postgres"
     driver-class-name: "org.postgresql.Driver"
   jpa:
-    database: "postgresql"
-    hibernate:
-      ddl-auto: validate
+      database: "postgresql"
+      hibernate:
+        ddl-auto: validate
+  cloud:
+    consul:
+      host: discovery
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}

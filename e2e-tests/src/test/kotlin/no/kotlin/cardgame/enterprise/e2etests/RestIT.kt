@@ -4,8 +4,7 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.awaitility.Awaitility
-import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
@@ -23,7 +22,8 @@ import java.util.concurrent.TimeUnit
 class RestIT {
 
 
-    companion object{
+    companion object {
+
         init {
             RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
             RestAssured.port = 80
@@ -36,40 +36,40 @@ class RestIT {
         val env = KDockerComposeContainer("card-game", File("../docker-compose.yml"))
                 .withExposedService("discovery", 8500,
                         Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(240)))
-                .withLogConsumer("cards_0"){ print("[CARD_0]" + it.utf8String)}
-                .withLogConsumer("cards_1"){ print("[CARD_1]" + it.utf8String)}
-                .withLogConsumer("user-collections"){ print("[USER_COLLECTIONS]" + it.utf8String)}
-                .withLogConsumer("scores"){ print("[SCORES]" + it.utf8String)}
+                .withLogConsumer("cards_0") { print("[CARD_0] " + it.utf8String) }
+                .withLogConsumer("cards_1") { print("[CARD_1] " + it.utf8String) }
+                .withLogConsumer("user-collections") { print("[USER_COLLECTIONS] " + it.utf8String) }
+                .withLogConsumer("scores") { print("[SCORES] " + it.utf8String) }
                 .withLocalCompose(true)
 
 
         @BeforeAll
-         @JvmStatic
-        fun waitForServes(){
+        @JvmStatic
+        fun waitForServers() {
 
             Awaitility.await().atMost(240, TimeUnit.SECONDS)
                     .pollDelay(Duration.ofSeconds(20))
                     .pollInterval(Duration.ofSeconds(10))
                     .ignoreExceptions()
-                    .until{
-                        given().baseUri("http://${env.getServiceHost("discovery",8500 )}")
-                                .port(env.getServicePort("discovery",8500))
-                                .get("/v1/agent/sevices")
+                    .until {
+
+                        given().baseUri("http://${env.getServiceHost("discovery", 8500)}")
+                                .port(env.getServicePort("discovery", 8500))
+                                .get("/v1/agent/services")
                                 .then()
                                 .body("size()", equalTo(5))
+
                         true
                     }
         }
-
     }
 
     @Test
-    fun testGetCollection(){
-
+    fun testGetCollection() {
         Awaitility.await().atMost(120, TimeUnit.SECONDS)
                 .pollInterval(Duration.ofSeconds(10))
                 .ignoreExceptions()
-                .until{
+                .until {
                     given().get("/api/cards/collection_v1_000")
                             .then()
                             .statusCode(200)
@@ -79,12 +79,11 @@ class RestIT {
     }
 
     @Test
-    fun testGetScores(){
-
+    fun testGetScores() {
         Awaitility.await().atMost(120, TimeUnit.SECONDS)
                 .pollInterval(Duration.ofSeconds(10))
                 .ignoreExceptions()
-                .until{
+                .until {
                     given().accept(ContentType.JSON)
                             .get("/api/scores")
                             .then()
@@ -95,28 +94,28 @@ class RestIT {
     }
 
     @Test
-    fun testCreateUser(){
-
+    fun testCreateUser() {
         Awaitility.await().atMost(120, TimeUnit.SECONDS)
                 .pollInterval(Duration.ofSeconds(10))
                 .ignoreExceptions()
                 .until {
 
-                    val id = "foo" + System.currentTimeMillis()
+                    val id = "foo_testCreateUser_" + System.currentTimeMillis()
 
                     given().get("/api/user-collections/$id")
                             .then()
                             .statusCode(404)
 
+
                     given().put("/api/user-collections/$id")
                             .then()
                             .statusCode(201)
 
-                    given().get("/api/user-collection/$id")
+                    given().get("/api/user-collections/$id")
                             .then()
                             .statusCode(200)
 
                     true
                 }
     }
-} // end restIT
+}

@@ -11,16 +11,16 @@ import javax.validation.constraints.NotNull
 @Entity
 class CardCopy(
 
-        @get:Id @get:GeneratedValue
+    @get:Id @get:GeneratedValue
     var id : Long? = null,
 
-        @get:ManyToOne
+    @get:ManyToOne
     @get:NotNull
     var user : User? = null,
 
-        @get:NotBlank
+    @get:NotBlank
     var cardId: String? = null,
 
-        @get:Min(0)
+    @get:Min(0)
     var numberOfCopies : Int = 0
 )

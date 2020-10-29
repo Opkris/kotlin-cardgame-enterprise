@@ -7,13 +7,13 @@ import kotlin.math.abs
 
 data class Collection(
 
-        val cards : List<Card>,
+    val cards : List<Card>,
 
-        val prices: Map<Rarity, Int>,
+    val prices: Map<Rarity, Int>,
 
-        val millValues: Map<Rarity, Int>,
+    val millValues: Map<Rarity, Int>,
 
-        val rarityProbabilities: Map<Rarity, Double>
+    val rarityProbabilities: Map<Rarity, Double>
 ){
 
     constructor(dto: CollectionDto) : this(

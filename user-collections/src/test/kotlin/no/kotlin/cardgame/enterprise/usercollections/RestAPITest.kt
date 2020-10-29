@@ -138,7 +138,7 @@ internal class RestAPITest {
     fun testOpenPack(){
 
         val userId = "foo"
-        given().auth().basic(userId, "password").put("/$userId").then().statusCode(201)
+        given().auth().basic(userId, "123").put("/$userId").then().statusCode(201)
 
         val before = userService.findByIdEager(userId)!!
         val totCards = before.ownedCards.sumBy { it.numberOfCopies }

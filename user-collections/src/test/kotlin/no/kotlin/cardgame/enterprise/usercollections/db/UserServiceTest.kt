@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 import org.springframework.test.context.ActiveProfiles
@@ -21,7 +22,7 @@ import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuit
 @Profile("UserServiceTest")
 @Primary
 @Service
-class FakeCardService : CardService(Resilience4JCircuitBreakerFactory()){
+class FakeCardService : CardService(RestTemplate(),Resilience4JCircuitBreakerFactory()){
 
     override fun fetchData() {
         val dto = FakeData.getCollectionDto()

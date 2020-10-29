@@ -1,20 +1,20 @@
 spring:
   application:
     name: api-gateway
-    cloud:
-      consul:
-        host: discovery
-        port: 8500
-        discovery:
-          instanceId: ${spring.application.name}:${random.value}
-      gateway:
-        discovery:
-          locator:
-            enabled: true
-        routes:
+  cloud:
+    consul:
+      host: discovery
+      port: 8500
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
         - id: Cards
           uri: lb://cards-service
-          predocates:
+          predicates:
             - Path=/api/cards/**
         - id: Scores
           uri: lb://scores-service

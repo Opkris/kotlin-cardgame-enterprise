@@ -23,7 +23,7 @@ import javax.annotation.PostConstruct
 
 @Service
 class CardService(
-
+        private val client: RestTemplate,
         private val circuitBreakerFactory: Resilience4JCircuitBreakerFactory
 ) {
 
@@ -43,7 +43,6 @@ class CardService(
 
     private lateinit var cb: CircuitBreaker
 
-    private val client = RestTemplate()
 
     @PostConstruct
     fun init(){
@@ -61,34 +60,36 @@ class CardService(
     fun isInitialized() = cardCollection.isNotEmpty()
 
     protected fun fetchData(){
-        val version ="v1_000"
+
+        val version = "v1_000"
         val uri = UriComponentsBuilder
                 .fromUriString("http://${cardServiceAddress.trim()}/api/cards/collection_$version")
                 .build().toUri()
 
-        val response = cb.run({
-            client.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    null,
-                    object : ParameterizedTypeReference<WrappedResponse<CollectionDto>>(){})
-        },
+        val response = cb.run(
                 {
-                    e ->
+                    client.exchange(
+                            uri,
+                            HttpMethod.GET,
+                            null,
+                            object : ParameterizedTypeReference<WrappedResponse<CollectionDto>>() {})
+                },
+                { e ->
                     log.error("Failed to fetch data from Card Service: ${e.message}")
                     null
                 }
         ) ?: return
 
-        if(response.statusCodeValue != 200){
-            log.error("Error in fetching data from card Service. Status ${response.statusCodeValue}." +
-            "Message " + response.body.message)
+
+        if (response.statusCodeValue != 200) {
+            log.error("Error in fetching data from Card Service. Status ${response.statusCodeValue}." +
+                    "Message: " + response.body.message)
         }
 
-        try{
+        try {
             collection = Collection(response.body.data!!)
-        } catch (e : Exception){
-            log.error("Failed to parese card collection into: ${e.message}")
+        } catch (e: Exception) {
+            log.error("Failed to parse card collection info: ${e.message}")
         }
     }
 
@@ -106,7 +107,7 @@ class CardService(
     fun millValue(cardId: String) : Int {
         verifyCollection()
         val card : Card = cardCollection.find { it.cardId  == cardId} ?:
-            throw IllegalArgumentException("Invalid cardId $cardId")
+        throw IllegalArgumentException("Invalid cardId $cardId")
 
         return collection!!.millValues[card.rarity]!!
     }
@@ -114,7 +115,7 @@ class CardService(
     fun price(cardId: String) : Int {
         verifyCollection()
         val card : Card = cardCollection.find { it.cardId  == cardId} ?:
-                throw IllegalArgumentException("Invalid cardId $cardId")
+        throw IllegalArgumentException("Invalid cardId $cardId")
 
         return collection!!.prices[card.rarity]!!
     }

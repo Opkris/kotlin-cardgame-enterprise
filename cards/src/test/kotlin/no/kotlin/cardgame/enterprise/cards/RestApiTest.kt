@@ -49,7 +49,6 @@ internal class RestApiTest {
                 .body("data.cards.size", greaterThan(10))
     }
 
-
     @Test
     fun testGetCollectionOldVersion() {
 
@@ -58,5 +57,4 @@ internal class RestApiTest {
                 .statusCode(200)
                 .body("data.cards.size", greaterThan(10))
     }
-
 }
