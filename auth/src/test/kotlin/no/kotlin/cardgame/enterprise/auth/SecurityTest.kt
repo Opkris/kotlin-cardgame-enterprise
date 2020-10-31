@@ -1,11 +1,13 @@
 package no.kotlin.cardgame.enterprise.auth
 
 import io.restassured.RestAssured
+import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
-import no.kotlin.cardgame.enterprise.auth.db.UserRepository
-import org.hamcrest.CoreMatchers
-import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions
+import no.jonpus.enterprise2.cardgame.auth.db.UserRepository
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matchers.contains
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,6 +24,7 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
+
 @ActiveProfiles("test")
 @Testcontainers
 @ExtendWith(SpringExtension::class)
@@ -35,30 +38,30 @@ class SecurityTest {
     @LocalServerPort
     private var port = 0
 
-
     companion object {
 
         class KGenericContainer(imageName: String) : GenericContainer<KGenericContainer>(imageName)
 
-        /*
-            Here, going to use an actual Redis instance started in Docker
-         */
-
         @Container
         @JvmField
         val redis = KGenericContainer("redis:latest").withExposedPorts(6379)
+
+        @Container
+        @JvmField
+        val rabbitMQ = KGenericContainer("rabbitmq:3").withExposedPorts(5672)
 
         class Initializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
             override fun initialize(configurableApplicationContext: ConfigurableApplicationContext) {
 
                 TestPropertyValues
                         .of("spring.redis.host=${redis.containerIpAddress}",
-                                "spring.redis.port=${redis.getMappedPort(6379)}")
+                                "spring.redis.port=${redis.getMappedPort(6379)}",
+                                "spring.rabbitmq.host=" + rabbitMQ.containerIpAddress,
+                                "spring.rabbitmq.port=" + rabbitMQ.getMappedPort(5672))
                         .applyTo(configurableApplicationContext.environment);
             }
         }
     }
-
 
     @BeforeEach
     fun initialize() {
@@ -70,41 +73,28 @@ class SecurityTest {
         userRepository.deleteAll()
     }
 
-
     @Test
     fun testUnauthorizedAccess() {
-
-        RestAssured.given().get("/user")
+        given().get("/user")
                 .then()
                 .statusCode(401)
     }
 
-
-    /**
-     *   Utility function used to create a new user in the database
-     */
     private fun registerUser(id: String, password: String): String {
 
-
-        val sessionCookie = RestAssured.given().contentType(ContentType.JSON)
+        val sessionCookie = given().contentType(ContentType.JSON)
                 .body(AuthDto(id, password))
                 .post("/signUp")
                 .then()
                 .statusCode(201)
-                .header("Set-Cookie", CoreMatchers.not(CoreMatchers.equalTo(null)))
+                .header("Set-Cookie", not(equalTo(null)))
                 .extract().cookie("SESSION")
-
-        /*
-            From now on, the user is authenticated.
-            I do not need to use userid/password in the following requests.
-            But each further request will need to have the SESSION cookie.
-         */
 
         return sessionCookie
     }
 
     private fun checkAuthenticatedCookie(cookie: String, expectedCode: Int){
-        RestAssured.given().cookie("SESSION", cookie)
+        given().cookie("SESSION", cookie)
                 .get("/user")
                 .then()
                 .statusCode(expectedCode)
@@ -120,36 +110,28 @@ class SecurityTest {
 
         val cookie = registerUser(name, pwd)
 
-        RestAssured.given().get("/user")
+        given().get("/user")
                 .then()
                 .statusCode(401)
 
-        RestAssured.given().cookie("SESSION", cookie)
+        given().cookie("SESSION", cookie)
                 .get("/user")
                 .then()
                 .statusCode(200)
-                .body("name", CoreMatchers.equalTo(name))
-                .body("roles", Matchers.contains("ROLE_USER"))
+                .body("name", equalTo(name))
+                .body("roles", contains("ROLE_USER"))
 
-
-
-        /*
-            Trying to login again will reset
-            the SESSION token.
-         */
-        val login = RestAssured.given().contentType(ContentType.JSON)
+        val login = given().contentType(ContentType.JSON)
                 .body(AuthDto(name, pwd))
                 .post("/login")
                 .then()
                 .statusCode(204)
-                .cookie("SESSION") // new SESSION cookie
+                .cookie("SESSION")
                 .extract().cookie("SESSION")
 
-        Assertions.assertNotEquals(login, cookie)
+        assertNotEquals(login, cookie)
         checkAuthenticatedCookie(login, 200)
     }
-
-
 
     @Test
     fun testWrongLogin() {
@@ -157,19 +139,18 @@ class SecurityTest {
         val name = "foo"
         val pwd = "bar"
 
-        val noAuth = RestAssured.given().contentType(ContentType.JSON)
+        val noAuth = given().contentType(ContentType.JSON)
                 .body(AuthDto(name, pwd))
                 .post("/login")
                 .then()
                 .statusCode(400)
                 .extract().cookie("SESSION")
 
-        //session is not created if not required, eg when 400 user error
-        Assertions.assertNull(noAuth)
+        assertNull(noAuth);
 
         registerUser(name, pwd)
 
-        val auth = RestAssured.given().contentType(ContentType.JSON)
+        val auth = given().contentType(ContentType.JSON)
                 .body(AuthDto(name, pwd))
                 .post("/login")
                 .then()

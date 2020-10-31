@@ -1,11 +1,10 @@
 package no.kotlin.cardgame.enterprise.e2etests
-
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.awaitility.Awaitility
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.greaterThan
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
@@ -120,14 +119,11 @@ class RestIT {
                             .post("/api/auth/signUp")
                             .then()
                             .statusCode(201)
-                            .header("Set-Cookie", CoreMatchers.not(equalTo(null)))
+                            .header("Set-Cookie", not(equalTo(null)))
                             .extract().cookie("SESSION")
-
 
                     given().cookie("SESSION", cookie)
                             .put("/api/user-collections/$id")
-                            .then()
-                            .statusCode(201)
 
                     given().cookie("SESSION", cookie)
                             .get("/api/user-collections/$id")
@@ -137,6 +133,71 @@ class RestIT {
                     true
                 }
     }
+
+    @Test
+    fun testAMQPSignUp() {
+        Awaitility.await().atMost(120, TimeUnit.SECONDS)
+                .pollInterval(Duration.ofSeconds(10))
+                .ignoreExceptions()
+                .until {
+
+                    val id = "foo_testCreateUser_" + System.currentTimeMillis()
+
+                    given().get("/api/auth/user")
+                            .then()
+                            .statusCode(401)
+
+                    given().put("/api/user-collections/$id")
+                            .then()
+                            .statusCode(401)
+
+                    given().get("/api/scores/$id")
+                            .then()
+                            .statusCode(404)
+
+
+                    val password = "123456"
+
+                    val cookie = given().contentType(ContentType.JSON)
+                            .body("""
+                                {
+                                    "userId": "$id",
+                                    "password": "$password"
+                                }
+                            """.trimIndent())
+                            .post("/api/auth/signUp")
+                            .then()
+                            .statusCode(201)
+                            .header("Set-Cookie", not(equalTo(null)))
+                            .extract().cookie("SESSION")
+
+                    given().cookie("SESSION", cookie)
+                            .get("/api/auth/user")
+                            .then()
+                            .statusCode(200)
+
+                    Awaitility.await().atMost(20, TimeUnit.SECONDS)
+                            .pollInterval(Duration.ofSeconds(2))
+                            .ignoreExceptions()
+                            .until {
+                                given().cookie("SESSION", cookie)
+                                        .get("/api/user-collections/$id")
+                                        .then()
+                                        .statusCode(200)
+
+                                given().get("/api/scores/$id")
+                                        .then()
+                                        .statusCode(200)
+                                        .body("data.score", equalTo(0))
+
+                                true
+                            }
+
+                    true
+                }
+    }
+
+
     @Test
     fun testUserCollectionAccessControl() {
 
@@ -157,7 +218,7 @@ class RestIT {
                 .post("/api/auth/signUp")
                 .then()
                 .statusCode(201)
-                .header("Set-Cookie", CoreMatchers.not(equalTo(null)))
+                .header("Set-Cookie", not(equalTo(null)))
                 .extract().cookie("SESSION")
 
 

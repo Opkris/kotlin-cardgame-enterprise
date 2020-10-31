@@ -1,30 +1,34 @@
 package no.kotlin.cardgame.enterprise.auth
 
-import java.security.Principal
+import no.kotlin.cardgame.enterprise.auth.db.UserService
+import org.springframework.amqp.core.FanoutExchange
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import no.kotlin.cardgame.enterprise.auth.db.UserService
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.web.bind.annotation.*
 
+import java.security.Principal
 
 @RestController
 @RequestMapping("/api/auth")
 class RestApi(
         private val service: UserService,
         private val authenticationManager: AuthenticationManager,
-        private val userDetailsService: UserDetailsService
+        private val userDetailsService: UserDetailsService,
+        private val rabbit: RabbitTemplate,
+        private val fanout: FanoutExchange
 ) {
 
     @RequestMapping("/user")
     fun user(user: Principal): ResponseEntity<Map<String, Any>> {
-        val map = mutableMapOf<String,Any>()
+        val map = mutableMapOf<String, Any>()
         map["name"] = user.name
         map["roles"] = AuthorityUtils.authorityListToSet((user as Authentication).authorities)
         return ResponseEntity.ok(map)
@@ -35,8 +39,8 @@ class RestApi(
     fun signUp(@RequestBody dto: AuthDto)
             : ResponseEntity<Void> {
 
-        val userId : String = dto.userId!!
-        val password : String = dto.password!!
+        val userId: String = dto.userId!!
+        val password: String = dto.password!!
 
         val registered = service.createUser(userId, password, setOf("USER"))
 
@@ -53,6 +57,8 @@ class RestApi(
             SecurityContextHolder.getContext().authentication = token
         }
 
+        rabbit.convertAndSend(fanout.name, "", userId)
+
         return ResponseEntity.status(201).build()
     }
 
@@ -61,12 +67,12 @@ class RestApi(
     fun login(@RequestBody dto: AuthDto)
             : ResponseEntity<Void> {
 
-        val userId : String = dto.userId!!
-        val password : String = dto.password!!
+        val userId: String = dto.userId!!
+        val password: String = dto.password!!
 
-        val userDetails = try{
+        val userDetails = try {
             userDetailsService.loadUserByUsername(userId)
-        } catch (e: UsernameNotFoundException){
+        } catch (e: UsernameNotFoundException) {
             return ResponseEntity.status(400).build()
         }
 
@@ -79,7 +85,6 @@ class RestApi(
             return ResponseEntity.status(204).build()
         }
 
-        authenticationManager.authenticate(token)
         return ResponseEntity.status(400).build()
     }
 }
