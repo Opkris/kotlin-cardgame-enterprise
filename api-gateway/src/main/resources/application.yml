@@ -29,6 +29,6 @@ spring:
           predicates:
             - Path=/api/user-collections/**
         - id: frontend
-          url: http://frontend:8080
+          uri: http://frontend:8080
           predicates:
-            -Path=/**
+            - Path=/**
