@@ -13,14 +13,12 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
-
                     <execution>
                         <id>yarn install</id>
                         <goals>
@@ -34,9 +32,8 @@
                             </arguments>
                         </configuration>
                     </execution>
-
                     <execution>
-                        <id>yarn</id>
+                        <id>yarn build</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -48,7 +45,6 @@
                             </arguments>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
         </plugins>

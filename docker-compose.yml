@@ -1,6 +1,7 @@
 version: '3.3'
 
 services:
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -9,6 +10,12 @@ services:
       - "80:8080"
     depends_on:
       - discovery
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
   rabbitmq:
     image:  "rabbitmq:3"
 
