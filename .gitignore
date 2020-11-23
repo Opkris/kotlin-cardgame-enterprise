@@ -1,5 +1,12 @@
 # Project exclude paths
-/cards-dto/target/
-/user-collections/target/
-/.idea
+
+**/target
+/.idea/
 /*.iml
+
+# Package Files #
+*.jar
+
+
+**/node_modules
+bundle.js
