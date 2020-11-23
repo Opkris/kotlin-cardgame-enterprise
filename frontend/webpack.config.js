@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entity: './src/client/index.js',
+    entry: './src/client/index.jsx',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'public')
@@ -9,18 +9,18 @@ module.exports = {
     module: {
         rules: [
             {
-                text: /\.jsx$/,
+                test: /\.jsx$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel -loader"
+                    loader: "babel-loader"
                 }
             }
         ]
     },
-    resolve:{
+    resolve: {
         extensions: ['.js', '.jsx']
     },
     devServer: {
-        contentBase: '/public'
+        contentBase: './public'
     }
 };

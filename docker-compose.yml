@@ -91,3 +91,9 @@ services:
       - discovery
       - postgres-scores
       - rabbitmq
+
+
+
+
+
+
