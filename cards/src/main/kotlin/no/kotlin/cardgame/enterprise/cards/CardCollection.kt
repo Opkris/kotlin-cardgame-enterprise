@@ -5,16 +5,16 @@ import no.kotlin.cardgame.enterprise.cards.dto.CollectionDto
 import no.kotlin.cardgame.enterprise.cards.dto.Rarity.*
 
 
-object CardCollection {
+object CardCollection{
 
-    fun get(): CollectionDto {
+    fun get() : CollectionDto{
 
         val dto = CollectionDto()
 
         dto.prices.run {
             put(BRONZE, 100)
             put(SILVER, 500)
-            put(GOLD, 1_000)
+            put(GOLD,   1_000)
             put(PINK_DIAMOND, 100_000)
         }
 
@@ -30,10 +30,9 @@ object CardCollection {
         addCards(dto)
 
         return dto
-
     }
 
-    private fun addCards(dto: CollectionDto) {
+    private fun addCards(dto: CollectionDto){
 
         dto.cards.run {
             add(CardDto("c000", "Green Mold", "lore ipsum", BRONZE, "035-monster.svg"))

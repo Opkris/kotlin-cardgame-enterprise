@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 @RestController
 class RestApi {
 
-    companion object {
+    companion object{
         const val LATEST = "v1_000"
     }
 
@@ -29,9 +29,9 @@ class RestApi {
             path = ["/collection_$LATEST"],
             produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun getLatest() : ResponseEntity<WrappedResponse<CollectionDto>> {
+    fun getLatest() : ResponseEntity<WrappedResponse<CollectionDto>>{
 
-        val collection = CardCollection.get()
+        val collection =  CardCollection.get()
 
         return ResponseEntity
                 .status(200)
@@ -45,7 +45,7 @@ class RestApi {
         "/collection_v0_002",
         "/collection_v0_003"
     ])
-    fun getOld() : ResponseEntity<Void> {
+    fun getOld() : ResponseEntity<Void>{
 
         return ResponseEntity.status(301)
                 .location(URI.create("/api/cards/collection_$LATEST"))
@@ -57,12 +57,12 @@ class RestApi {
             path= ["/imgs/{imgId}"],
             produces= ["image/svg+xml"]
     )
-    fun getImage(@PathVariable("imgId") imgId: String) : ResponseEntity<String> {
+    fun getImage(@PathVariable("imgId") imgId: String) : ResponseEntity<String>{
 
         val folder = when{
             imgId.run{ endsWith("-monster.svg") || endsWith("-cyclops.svg")
                     || endsWith("-dragon.svg") || endsWith("-snake.svg")}
-            -> "/1236106-monsters"
+                    -> "/1236106-monsters"
             else -> return ResponseEntity.status(400).build()
         }
 
@@ -74,5 +74,4 @@ class RestApi {
                 .cacheControl(CacheControl.maxAge(365, TimeUnit.DAYS).cachePublic())
                 .body(svg)
     }
-
 }

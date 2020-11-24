@@ -28,8 +28,8 @@ class Application {
                 .version("1.0")
                 .build()
     }
-
 }
+
 
 fun main(args: Array<String>) {
     SpringApplication.run(Application::class.java, *args)
