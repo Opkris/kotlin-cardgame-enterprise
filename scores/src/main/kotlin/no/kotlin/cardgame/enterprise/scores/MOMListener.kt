@@ -10,7 +10,7 @@ class MOMListener(
         private val statsService: UserStatsService
 ) {
 
-    companion object {
+    companion object{
         private val log = LoggerFactory.getLogger(MOMListener::class.java)
     }
 

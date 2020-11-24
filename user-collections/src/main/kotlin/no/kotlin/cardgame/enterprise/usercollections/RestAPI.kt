@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 
 
-
-
 @Api(value = "/api/user-collections", description = "Operations on card collections owned by users")
 @RequestMapping(
         path = ["/api/user-collections"],

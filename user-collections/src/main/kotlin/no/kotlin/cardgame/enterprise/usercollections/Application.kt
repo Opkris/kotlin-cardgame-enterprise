@@ -21,7 +21,7 @@ class Application {
 
     @LoadBalanced
     @Bean
-    fun loadBalancedClient(): RestTemplate {
+    fun loadBalancedClient() : RestTemplate {
         return RestTemplate()
     }
 

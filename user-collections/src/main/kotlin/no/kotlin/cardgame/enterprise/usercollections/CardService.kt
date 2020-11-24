@@ -107,7 +107,7 @@ class CardService(
     fun millValue(cardId: String) : Int {
         verifyCollection()
         val card : Card = cardCollection.find { it.cardId  == cardId} ?:
-        throw IllegalArgumentException("Invalid cardId $cardId")
+            throw IllegalArgumentException("Invalid cardId $cardId")
 
         return collection!!.millValues[card.rarity]!!
     }
@@ -115,7 +115,7 @@ class CardService(
     fun price(cardId: String) : Int {
         verifyCollection()
         val card : Card = cardCollection.find { it.cardId  == cardId} ?:
-        throw IllegalArgumentException("Invalid cardId $cardId")
+                throw IllegalArgumentException("Invalid cardId $cardId")
 
         return collection!!.prices[card.rarity]!!
     }

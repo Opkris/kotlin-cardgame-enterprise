@@ -137,7 +137,6 @@ class UserService(
             addCard(user, it.cardId)
             ids.add(it.cardId)
         }
-
         return ids
     }
 }
