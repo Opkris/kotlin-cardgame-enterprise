@@ -19,10 +19,10 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableWebSecurity
-class WebSecurityConfig (
+class WebSecurityConfig(
         private val dataSource: DataSource,
         private val passwordEncoder: PasswordEncoder
-): WebSecurityConfigurerAdapter(){
+) : WebSecurityConfigurerAdapter() {
 
     @Bean
     override fun userDetailsServiceBean(): UserDetailsService {
@@ -30,7 +30,7 @@ class WebSecurityConfig (
     }
 
     @Bean
-    override fun authenticationManagerBean(): AuthenticationManager {
+    override fun authenticationManagerBean() : AuthenticationManager {
         return super.authenticationManagerBean()
     }
 
